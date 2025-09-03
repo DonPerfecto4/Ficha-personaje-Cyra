@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Personaje - DnD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    <!-- Librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #9d4edd;
+            --secondary-color: #4b0082;
+            --background-color: #121212;
+            --text-color: #f0e6d2;
+            --glow-color: #c77dff;
+            --border-glow: 0 0 8px var(--glow-color), 0 0 12px var(--secondary-color);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+	.lore-text {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #e0e0e0;
+  text-align: justify;
+  margin-top: 1em;
+}
+
+.lore-text p {
+  margin-bottom: 1em;
+}
+
+.lore-text strong {
+  color: var(--primary-color);
+}
+
+.lore-text em {
+  font-style: italic;
+  color: #c9a0ff;
+}
+
+
+        body {
+            font-family: 'Cinzel', serif;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(to bottom, #1a1326, #0d0614);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .character-hub {
+            position: relative;
+            width: 550px;
+            height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .character-hub::before {
+            content: '';
+            position: absolute;
+            width: 480px;
+            height: 480px;
+            border: 2px dashed var(--secondary-color);
+            border-radius: 50%;
+            animation: rotate 60s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .character-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            box-shadow: var(--border-glow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            animation: pulse 4s infinite ease-in-out;
+            z-index: 2;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: var(--border-glow); transform: scale(1); }
+            50% { box-shadow: 0 0 16px var(--glow-color), 0 0 24px var(--secondary-color); transform: scale(1.05); }
+            100% { box-shadow: var(--border-glow); transform: scale(1); }
+        }
+
+        .character-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .section-button {
+            position: absolute;
+            width: 150px;
+            height: 55px;
+            background: linear-gradient(45deg, var(--secondary-color), #2d004d);
+            border: 2px solid var(--primary-color);
+            color: var(--text-color);
+            font-family: 'IM Fell English SC', serif;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 0 8px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .section-button i {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .section-button:hover {
+            background-color: var(--secondary-color);
+            box-shadow: var(--border-glow);
+        }
+        
+        .section-button:hover i {
+            transform: rotate(-15deg) scale(1.2);
+        }
+
+        /* Corrección: usar nth-child en vez de nth-of-type para buttons */
+        .section-button:nth-child(2) { transform: rotate(0deg) translate(250px) rotate(0deg); }
+        .section-button:nth-child(2):hover { transform: rotate(0deg) translate(250px) rotate(0deg) scale(1.1); }
+
+        .section-button:nth-child(3) { transform: rotate(60deg) translate(250px) rotate(-60deg); }
+        .section-button:nth-child(3):hover { transform: rotate(60deg) translate(250px) rotate(-60deg) scale(1.1); }
+
+        .section-button:nth-child(4) { transform: rotate(120deg) translate(250px) rotate(-120deg); }
+        .section-button:nth-child(4):hover { transform: rotate(120deg) translate(250px) rotate(-120deg) scale(1.1); }
+
+        .section-button:nth-child(5) { transform: rotate(180deg) translate(250px) rotate(-180deg); }
+        .section-button:nth-child(5):hover { transform: rotate(180deg) translate(250px) rotate(-180deg) scale(1.1); }
+
+        .section-button:nth-child(6) { transform: rotate(240deg) translate(250px) rotate(-240deg); }
+        .section-button:nth-child(6):hover { transform: rotate(240deg) translate(250px) rotate(-240deg) scale(1.1); }
+
+        .section-button:nth-child(7) { transform: rotate(300deg) translate(250px) rotate(-300deg); }
+        .section-button:nth-child(7):hover { transform: rotate(300deg) translate(250px) rotate(-300deg) scale(1.1); }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #1a1a1a url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--border-glow), 0 0 30px black;
+            width: 90%;
+            max-width: 900px !important;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9) rotateX(-20deg);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1) rotateX(0deg);
+        }
+
+        .modal-content h2 {
+            font-family: 'IM Fell English SC', serif;
+            color: var(--glow-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+        
+        .modal-content hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-color), rgba(0, 0, 0, 0));
+            margin: 20px 0;
+        }
+
+        .modal-content p {
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .close-button:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg) scale(1.2);
+        }
+        
+        @media (max-width: 600px) {
+            .character-hub {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                padding: 40px 0;
+            }
+            .character-hub::before {
+                display: none;
+            }
+            .character-image {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 40px;
+            }
+            .section-button {
+                position: static;
+                transform: none !important;
+                margin: 10px 0;
+                width: 220px;
+            }
+        }
+        /* Mejora: ocultar scroll bar fea en modal-content */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+            background: #222;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+	/* Fondo estrellado animado */
+.stars-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.8;
+    box-shadow: 0 0 8px #fff, 0 0 24px #c77dff;
+    animation: star-move linear infinite;
+}
+@keyframes star-move {
+    0% { transform: translateY(0); opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0.3; }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="character-hub">
+        <div class="character-image">
+            <img src="125154.jpg" alt="Imagen del Personaje" class="central-image" loading="lazy">
+        </div>
+
+        <button class="section-button" data-modal="raza-modal"><i class="fa-solid fa-dna"></i>Raza</button>
+        <button class="section-button" data-modal="lore-modal"><i class="fa-solid fa-book-open"></i>Lore</button>
+        <button class="section-button" data-modal="clase-modal"><i class="fa-solid fa-khanda"></i>Clase</button>
+        <button class="section-button" data-modal="subclase-modal"><i class="fa-solid fa-shield-halved"></i>Subclase</button>
+        <button class="section-button" data-modal="hechizos-modal"><i class="fa-solid fa-wand-sparkles"></i>Hechizos</button>
+        <button class="section-button" data-modal="invocaciones-modal"><i class="fa-solid fa-ghost"></i>Invocaciones</button>
+    </div>
+
+ 	<!-- Modales -->
+
+<div id="raza-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-button">&times;</button>
+        <h2>Raza</h2>
+        <hr>
+        <p>Los Shadar-kai son elfos que vivieron tanto tiempo en la Sombra (Shadowfell) que su esencia cambió: ahora existen a medio camino entre la vida y la muerte, con piel cenicienta y un aura sombría. Esta versión es aún más extrema porque es no-muerta (undead) y vampírica.</p>
+        <h3>⚔️ Rasgos principales</h3>
+        <ol>
+            <li style="margin-bottom: 15px;">
+                <strong>Tipo de criatura</strong>
+                <ul>
+                    <li>Eres No-muerto (Undead).</li>
+                    <li>También cuentas como elfo para efectos de rasgos y prerrequisitos.</li>
+                </ul>
+            </li>
+            <li style="margin-bottom: 15px;">
+                <strong>Tamaño y velocidad</strong>
+                <ul>
+                    <li>Tamaño: Medio.</li>
+                    <li>Velocidad de movimiento: 40 pies (más rápida que un humano o elfo normal, que suelen tener 30).</li>
+                </ul>
+            </li>
+            <li style="margin-bottom: 15px;">
+                <strong>Bendición de la Reina Cuervo (Blessing of the Raven Queen)</strong>
+                <ul>
+                    <li>Como acción bonus, te teletransportas 30 pies a un espacio desocupado que veas.</li>
+                    <li>Usos: igual a tu bonificador de competencia (recuperas al terminar un descanso largo).</li>
+                    <li>A partir de nivel 3: al teletransportarte ganas resistencia a todo el daño hasta el inicio de tu siguiente turno y te vuelves translúcido/fantasmagórico.</li>
+                </ul>
+            </li>
+            <li style="margin-bottom: 15px;">
+                <strong>Visión en la oscuridad superior (Superior Darkvision)</strong>
+                <ul>
+                    <li>Ves en la oscuridad hasta 120 pies.</li>
+                    <li>Los colores se ven solo en escala de grises.</li>
+                </ul>
+            </li>
+            <li style="margin-bottom: 15px;">
+                <strong>Sentidos agudos (Keen Senses)</strong>
+                <ul>
+                    <li>Proficiencia en Percepción.</li>
+                </ul>
+            </li>
+            <li style="margin-bottom: 15px;">
+                <strong>Naturaleza no-muerta (Undead Nature)</strong>
+                <ul>
+                    <li>Ventajas contra efectos de veneno.</li>
+                    <li>Resistencia al daño de veneno.</li>
+                    <li>Ventaja en tiradas de salvación contra muerte.</li>
+                    <li>No necesitas comer, beber ni respirar.</li>
+                    <li>No duermes y eres inmune a ser dormido por magia.</li>
+                    <li>Un descanso largo te dura solo 4 horas en un estado consciente de reposo.</li>
+                    <li>Cada vez que terminas un descanso largo, puedes aprender 2 competencias temporales (armas o herramientas del Player’s Handbook), que desaparecen en tu siguiente descanso largo. Esto es como conectarte a la memoria compartida de los elfos.</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div id="lore-modal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-button">&times;</button>
+    <h2>Lore / Trasfondo</h2>
+    <hr>
+    <div class="lore-text">
+      <p><strong>Cirelya Dath'Varan – Hija del Páramo y la Espada</strong></p>
+
+      <p><strong>Cyra</strong> nació en el <em>Páramo Sombrío</em>, hija de 
+      <strong>Virelle Dath'Varan</strong>, una vampira de antiguo linaje, 
+      y <strong>Thalanor</strong>, guardia de élite del reino de <em>Kael’drith</em>.  
+      Virelle se refugió allí durante el embarazo, tratando de protegerla del juicio de ambos mundos.  
+      La tierra que las acogió dejó su marca en Cyra desde que nació: una niña de piel ceniza, ojos apagados y un aura antinatural que no abandonaba la habitación.</p>
+
+      <p>Cuando tenía siete años, su madre desapareció sin explicación.  
+      Un sirviente leal la llevó entonces a Kael’drith.  
+      Thalanor la reconoció sin dudar y la crió como pudo entre misiones, entrenamiento riguroso y una vigilancia que siempre pareció más silenciosa que afectuosa.</p>
+
+      <p>Mientras él salía en expediciones, Cyra creció explorando el castillo: pasadizos ocultos, torres olvidadas, habitaciones selladas…  
+      En una de esas excursiones encontró una cripta oculta bajo la biblioteca.  
+      Detrás de una puerta oxidada y rota, la esperaba un tomo encuadernado en cuero oscuro.  
+      Sus páginas estaban cubiertas de símbolos que no recordaba haber aprendido, pero que comprendía.  
+      El libro hablaba de un ritual de comunión con la <strong>Reina Cuervo</strong>, una forma de acceder a conocimientos prohibidos a cambio de algo personal.</p>
+
+      <p>No lo hizo por poder.  
+      Lo hizo por necesidad.</p>
+
+      <p>El precio fue <em>Sangre jurada</em>: un frasco de su sangre mezclada con sombras del Páramo, entregado bajo la luna nueva, firmándolo con su nombre verdadero.  
+      La Reina aceptó sin pedir obediencia ni sumisión. Solo un vínculo.  
+      Un lazo que le permite aparecer en sueños, provocar visiones, alterar detalles sutiles del mundo que la rodea.</p>
+
+      <p>No buscaba una sierva.  
+      Encontró en Cyra una pieza curiosa en un juego que sólo ella comprende.</p>
+
+      <p>Desde entonces, algo la sigue.  
+      Las sombras la reconocen.  
+      Su espada no solo es acero: canaliza el eco de un pacto sellado con un poder que aún no entiende del todo.</p>
+
+      <p>Con el tiempo, Cyra se despidió en silencio de su padre, preparó su mochila y se fue.  
+      Sabía que las respuestas que buscaba no estaban entre esos muros de piedra.</p>
+
+      <p>Abandonó Kael’drith en busca de conocimiento, poder… o algo que diera forma al caos que lleva dentro.</p>
+    </div>
+  </div>
+</div>
+
+
+<div id="clase-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-button">&times;</button>
+        <h2>Clase: Bruja Guerrera</h2>
+        <hr>
+        <p>Estos guerreros combinan el arte marcial con la magia de su vínculo con un patrón. A medida que suben de nivel, desarrollan habilidades físicas y mágicas únicas.</p>
+         <h3>📊 Tabla de progresión</h3>
+        <style>
+            .progression-table {
+                width: 100%;
+                border-collapse: collapse;
+                text-align: center;
+                margin-top: 15px;
+                font-size: 0.9em;
+            }
+            .progression-table th, .progression-table td {
+                border: 1px solid #555;
+                padding: 8px;
+            }
+            .progression-table th {
+                background-color: #333;
+                color: white;
+            }
+            .progression-table td {
+                background-color: #fdfdfd;
+                color: #222;
+            }
+            .progression-table tr:nth-child(even) td {
+                background-color: #f2f2f2;
+            }
+        </style>
+        <table class="progression-table">
+            <thead>
+                <tr>
+                    <th>Nivel</th>
+                    <th>Bono de Competencia</th>
+                    <th>Características de Clase</th>
+                    <th>Vigor</th>
+                    <th>Maestría con Armas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>+2</td><td>Estilo de Combate, Vigor, Maestría con Armas</td><td>2</td><td>3</td></tr>
+                <tr><td>2</td><td>+2</td><td>Oleada de Acción (un uso), Mente Táctica</td><td>2</td><td>3</td></tr>
+                <tr><td>3</td><td>+2</td><td>Subclase de Guerrero</td><td>2</td><td>3</td></tr>
+                <tr><td>4</td><td>+2</td><td>Mejora de Puntuación de Característica</td><td>3</td><td>4</td></tr>
+                <tr><td>5</td><td>+3</td><td>Ataque Extra, Cambio Táctico</td><td>3</td><td>4</td></tr>
+                <tr><td>6</td><td>+3</td><td>Mejora de Puntuación de Característica</td><td>3</td><td>4</td></tr>
+                <tr><td>7</td><td>+3</td><td>Rasgo de Subclase</td><td>3</td><td>4</td></tr>
+                <tr><td>8</td><td>+3</td><td>Mejora de Puntuación de Característica</td><td>3</td><td>4</td></tr>
+                <tr><td>9</td><td>+4</td><td>Indomable (un uso), Maestro Táctico</td><td>3</td><td>4</td></tr>
+                <tr><td>10</td><td>+4</td><td>Rasgo de Subclase</td><td>4</td><td>5</td></tr>
+                <tr><td>11</td><td>+4</td><td>Dos Ataques Extra</td><td>4</td><td>5</td></tr>
+                <tr><td>12</td><td>+4</td><td>Mejora de Puntuación de Característica</td><td>4</td><td>5</td></tr>
+                <tr><td>13</td><td>+5</td><td>Indomable (dos usos), Ataques Estudiados</td><td>4</td><td>5</td></tr>
+                <tr><td>14</td><td>+5</td><td>Mejora de Puntuación de Característica</td><td>4</td><td>5</td></tr>
+                <tr><td>15</td><td>+5</td><td>Rasgo de Subclase</td><td>4</td><td>5</td></tr>
+                <tr><td>16</td><td>+5</td><td>Mejora de Puntuación de Característica</td><td>4</td><td>6</td></tr>
+                <tr><td>17</td><td>+6</td><td>Oleada de Acción (dos usos), Indomable (tres usos)</td><td>4</td><td>6</td></tr>
+                <tr><td>18</td><td>+6</td><td>Rasgo de Subclase</td><td>4</td><td>6</td></tr>
+                <tr><td>19</td><td>+6</td><td>Don Épico</td><td>4</td><td>6</td></tr>
+                <tr><td>20</td><td>+6</td><td>Tres Ataques Extra</td><td>4</td><td>6</td></tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 25px;">📖 Rasgos del Guerrero</h3>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 1: Estilo de Combate</h4>
+            <p>Ganas una dote de Estilo de Combate de tu elección. Cada vez que subes de nivel, puedes reemplazarla por otra dote de Estilo de Combate.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 1: Vigor (Second Wind)</h4>
+            <p>Posees una reserva limitada de resistencia física y mental. Como acción adicional, puedes recuperar <strong>1d10 + nivel de Guerrero</strong> Puntos de Golpe.</p>
+            <ul>
+                <li>Puedes usarlo dos veces. Recuperas un uso tras un Descanso Corto, y todos los usos tras un Descanso Largo.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 1: Maestría con Armas</h4>
+            <p>Usas la propiedad de maestría de tres armas Simples o Marciales de tu elección. Cada Descanso Largo, puedes cambiar una de las armas seleccionadas.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 2: Oleada de Acción</h4>
+            <p>Puedes realizar una acción adicional en tu turno (excepto acción de magia). Se recarga tras un Descanso Corto o Largo. A partir del nivel 17, puedes usarla dos veces por descanso, pero solo una vez por turno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 2: Mente Táctica</h4>
+            <p>Cuando fallas una prueba de característica, puedes gastar un uso de Vigor para sumar <strong>1d10</strong> al resultado, pudiendo convertir el fallo en éxito. Si sigue fallando, no se gasta el uso.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 3: Subclase de Guerrero</h4>
+            <p>Ganas una subclase que te otorga características a niveles determinados. Obtienes todos los rasgos de tu subclase hasta tu nivel actual.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 4, 6, 8, 12, 14, 16: Mejora de Puntuación de Característica</h4>
+            <p>Puedes aumentar tus puntuaciones o elegir otra dote para la que cumplas los requisitos.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 5: Ataque Extra</h4>
+            <p>Puedes atacar dos veces al realizar la acción de Ataque en tu turno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 5: Cambio Táctico</h4>
+            <p>Cuando activas tu Vigor, puedes moverte hasta la mitad de tu velocidad sin provocar ataques de oportunidad.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 9: Maestro Táctico</h4>
+            <p>Cuando atacas con un arma cuya maestría puedes usar, puedes reemplazar su propiedad por Empujar, Debilitar o Ralentizar para ese ataque.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 9, 13, 17: Indomable</h4>
+            <p>Si fallas una tirada de salvación, puedes volver a tirarla con bono igual a tu nivel de Guerrero. Recargas tras Descanso Largo. Dos usos a nivel 13, tres usos a nivel 17.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 11: Dos Ataques Extra</h4>
+            <p>Puedes atacar tres veces al realizar la acción de Ataque en tu turno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 13: Ataques Estudiados</h4>
+            <p>Si fallas un ataque contra una criatura, obtienes ventaja en tu siguiente ataque contra ella antes del final de tu siguiente turno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Nivel 19: Don Épico</h4>
+            <p>Ganas una dote de Don Épico o cualquier otra dote para la que cumplas requisitos.</p>
+        </div>
+
+        <div>
+            <h4>Nivel 20: Tres Ataques Extra</h4>
+            <p>Puedes atacar cuatro veces al realizar la acción de Ataque en tu turno.</p>
+        </div>
+
+    </div>
+</div>
+
+<div id="subclase-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-button">&times;</button>
+        <h2>Subclase / Patrón</h2>
+        <hr>
+        <p>Estos guerreros firman un pacto con un Patrón para aumentar sus capacidades de combate. A partir del nivel 3, realizan un contrato y obtienen invocaciones y conjuros. Conforme suben de nivel, acceden a más magia e invocaciones.</p>
+        <h3>📊 Tabla de progresión</h3>
+        <style>
+    .progression-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.9em;
+    }
+    .progression-table th, .progression-table td {
+        border: 1px solid #555;
+        padding: 8px;
+    }
+    /* Encabezado oscuro con texto blanco */
+    .progression-table th {
+        background-color: #333;
+        color: white;
+    }
+    /* Filas de la tabla con fondo claro y texto oscuro */
+    .progression-table td {
+        background-color: #fdfdfd;
+        color: #222;
+    }
+    /* Color para las filas pares para mejorar legibilidad */
+    .progression-table tr:nth-child(even) td {
+        background-color: #f2f2f2;
+    }
+</style>
+        <table class="progression-table">
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Cantrips Known</th>
+                    <th>Spells Known</th>
+                    <th>Spell Slots</th>
+                    <th>Slot Level</th>
+                    <th>Invocations Known</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>3rd</td><td>2</td><td>2</td><td>2</td><td>1st</td><td>1</td></tr>
+                <tr><td>4th</td><td>2</td><td>3</td><td>2</td><td>1st</td><td>1</td></tr>
+                <tr><td>5th</td><td>2</td><td>4</td><td>2</td><td>2nd</td><td>2</td></tr>
+                <tr><td>6th</td><td>2</td><td>5</td><td>2</td><td>2nd</td><td>2</td></tr>
+                <tr><td>7th</td><td>2</td><td>6</td><td>2</td><td>2nd</td><td>2</td></tr>
+                <tr><td>8th</td><td>2</td><td>7</td><td>2</td><td>2nd</td><td>2</td></tr>
+                <tr><td>9th</td><td>2</td><td>8</td><td>2</td><td>3rd</td><td>2</td></tr>
+                <tr><td>10th</td><td>2</td><td>9</td><td>2</td><td>3rd</td><td>2</td></tr>
+                <tr><td>11th</td><td>3</td><td>10</td><td>3</td><td>3rd</td><td>3</td></tr>
+                <tr><td>12th</td><td>3</td><td>11</td><td>3</td><td>4th</td><td>3</td></tr>
+                <tr><td>13th</td><td>3</td><td>12</td><td>3</td><td>4th</td><td>3</td></tr>
+                <tr><td>14th</td><td>3</td><td>12</td><td>3</td><td>4th</td><td>3</td></tr>
+                <tr><td>15th</td><td>3</td><td>13</td><td>3</td><td>4th</td><td>3</td></tr>
+                <tr><td>16th</td><td>3</td><td>13</td><td>3</td><td>5th</td><td>4</td></tr>
+                <tr><td>17th</td><td>3</td><td>14</td><td>4</td><td>5th</td><td>4</td></tr>
+                <tr><td>18th</td><td>3</td><td>14</td><td>4</td><td>5th</td><td>4</td></tr>
+                <tr><td>19th</td><td>3</td><td>15</td><td>4</td><td>5th</td><td>4</td></tr>
+                <tr><td>20th</td><td>3</td><td>15</td><td>4</td><td>5th</td><td>5</td></tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 25px;">📖 Rasgos de la Subclase</h3>
+        
+        <div style="margin-bottom: 20px;">
+            <h4>Contract of Power (Nivel 3)</h4>
+            <p>Al llegar al nivel 3, haces un trato con una entidad sobrenatural y firmas un contrato que te otorga extraños poderes en combate. A partir de aquí, ganas acceso a invocaciones y a la magia del brujo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Soul Bonded Weapon (Nivel 3)</h4>
+            <p>En el nivel 3, aprendes un ritual que crea un vínculo de alma con un arma.</p>
+            <ul>
+                <li>El ritual dura 1 hora (puede hacerse durante un descanso corto).</li>
+                <li>El arma debe estar a tu alcance durante todo el ritual. Al finalizar, tocas el arma y creas el vínculo.</li>
+                <li>Una vez vinculado, no puedes ser desarmado de ese arma salvo que estés incapacitado.</li>
+                <li>Si está en el mismo plano, puedes invocar tu arma como acción bonus, teleportándola instantáneamente a tu mano.</li>
+                <li>Solo puedes tener un arma vinculada a la vez. Si intentas vincularte con otra, el vínculo anterior se rompe.</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4>Eldritch Invocations (Nivel 3)</h4>
+            <p>En el nivel 3, obtienes una invocación sobrenatural de tu elección.</p>
+             <ul>
+                <li>Tus opciones están al final de la descripción de la clase (como en brujo).</li>
+                <li>Al ganar ciertos niveles, recibes más invocaciones, según se muestra en la columna <em>Invocations Known</em> de la tabla.</li>
+                <li>Siempre que subas de nivel, puedes cambiar una invocación conocida por otra que puedas aprender en ese nivel.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Soul Bonded Magic (Nivel 3)</h4>
+            <p>Tu investigación arcana y el poder que te otorga tu patrón te permiten lanzar conjuros.</p>
+            <ul>
+                <li style="margin-bottom: 10px;"><strong>Trucos (Cantrips)</strong>
+                    <ul>
+                        <li>Conoces 2 trucos de la lista de brujo.</li>
+                        <li>Aprendes más a niveles superiores (ver tabla).</li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 10px;"><strong>Espacios de conjuro</strong>
+                    <ul>
+                        <li>Tienes espacios de conjuro como el brujo.</li>
+                        <li>Todos tus espacios son del mismo nivel, indicado en la columna <em>Slot Level</em>.</li>
+                        <li>Recuperas todos los espacios gastados tras un descanso corto o largo.</li>
+                        <li><strong>Ejemplo:</strong> al nivel 5 tienes 2 espacios de 3er nivel. Si lanzas <em>Witch Bolt</em> (nivel 1), gastas un espacio de nivel 3 y el conjuro se lanza como si fuese de 3er nivel.</li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 10px;"><strong>Conjuros conocidos</strong>
+                     <ul>
+                        <li>En nivel 3 conoces 2 conjuros de nivel 1 de la lista de brujo.</li>
+                        <li>Aprendes más al subir de nivel (ver columna <em>Spells Known</em>).</li>
+                        <li>Cuando subes de nivel puedes cambiar un conjuro conocido por otro de la lista de brujo, siempre dentro del nivel de espacios que tengas.</li>
+                    </ul>
+                </li>
+                 <li style="margin-bottom: 10px;"><strong>Habilidad de lanzamiento</strong>
+                     <ul>
+                        <li>Tu habilidad de lanzador es Carisma.</li>
+                        <li>CD de salvación de conjuros = 8 + bonificador de competencia + modificador de Carisma.</li>
+                        <li>Tiradas de ataque con conjuros = competencia + modificador de Carisma.</li>
+                    </ul>
+                </li>
+                 <li><strong>Foco de conjuración</strong>
+                     <ul>
+                        <li>Puedes usar un foco arcano como catalizador de tus conjuros de brujo.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Patron’s Ward (Nivel 7)</h4>
+            <p>A nivel 7, tu patrón te concede la habilidad de protegerte contra ataques y de aprovechar los fallos de tus enemigos.</p>
+            <ul>
+                <li>Cuando una criatura hace una tirada de ataque contra ti, puedes usar tu reacción para imponer desventaja en ese ataque.</li>
+                <li>Si falla, tu siguiente ataque contra esa criatura tiene ventaja, siempre que lo realices antes de terminar tu próximo turno.</li>
+                <li>Una vez lo uses, no puedes volver a hacerlo hasta terminar un descanso corto o largo.</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4>Soul Bond’s Protection (Nivel 10)</h4>
+             <p>A partir del nivel 10, tu vínculo de alma puede protegerte de distintos tipos de daño.</p>
+            <ul>
+                <li>Al terminar un descanso corto o largo, eliges un tipo de daño (ejemplo: fuego, frío, ácido, etc.).</li>
+                <li>Obtienes resistencia contra ese tipo de daño hasta que elijas otro tras otro descanso.</li>
+                <li>Limitación: el daño de armas mágicas o plateadas ignora esta resistencia.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4>Improved Soul Bond (Nivel 15)</h4>
+            <p>Desde el nivel 15, puedes combinar mejor magia y acero.</p>
+            <ul>
+                <li>Cuando usas tu acción para lanzar un conjuro, puedes hacer un ataque con tu arma vinculada como acción bonus.</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h4>Push Through the Planes (Nivel 18)</h4>
+            <p>En el nivel 18, tu vínculo te permite destrozar la realidad de un enemigo.</p>
+            <ul>
+                <li>Cuando golpeas a una criatura con tu arma vinculada, puedes usar esta habilidad para enviarla instantáneamente a través de todos los planos de existencia.</li>
+                <li>El objetivo desaparece hasta el final de tu próximo turno.</li>
+                <li>Luego regresa al espacio que ocupaba (o el más cercano libre).</li>
+                <li>Al volver, recibe 10d10 de daño psíquico porque su mente, cuerpo y alma han sido desgarrados por todas las realidades.</li>
+                <li>Una vez lo uses, no puedes volver a hacerlo hasta terminar un descanso corto o largo.</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div id="hechizos-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-button">&times;</button>
+        <h2>Hechizos de Brujo</h2>
+        <hr>
+          <!-- CANTRIPS -->
+        <h3>✨ Cantrips</h3>
+        <button class="collapsible">Mostrar / Ocultar Cantrips</button>
+        <div class="content" style="display:none; margin-top:10px;">
+            <table class="progression-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th><th>Escuela / Componentes</th><th>Tiempo de Lanzamiento</th><th>Duración</th><th>Alcance / Área</th><th>Tirada / Defensa</th><th>Daño / Efecto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Blade Ward</td><td>Abjuración • V, S</td><td>1 acción</td><td>1 minuto</td><td>Self</td><td>–</td><td>Combate</td></tr>
+                    <tr><td>Booming Blade</td><td>Evocación • S, M</td><td>1 acción</td><td>1 ronda</td><td>Self (5 ft.)</td><td>Melee</td><td>Thunder</td></tr>
+                    <tr><td>Chill Touch</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Instantáneo</td><td>Touch</td><td>Melee</td><td>Necrotic</td></tr>
+                    <tr><td>Create Bonfire</td><td>Conjuración • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft. (5 ft.)</td><td>DEX Save</td><td>Fire</td></tr>
+                    <tr><td>Eldritch Blast</td><td>Evocación • V, S</td><td>1 acción</td><td>Instantáneo</td><td>120 ft.</td><td>Ranged</td><td>Force</td></tr>
+                    <tr><td>Friends</td><td>Encantamiento • S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>10 ft.</td><td>–</td><td>Buff</td></tr>
+                    <tr><td>Frostbite</td><td>Evocación • V, S</td><td>1 acción</td><td>Instantáneo</td><td>60 ft.</td><td>CON Save</td><td>Cold</td></tr>
+                    <tr><td>Green-Flame Blade</td><td>Evocación • S, M</td><td>1 acción</td><td>Instantáneo</td><td>Self (5 ft.)</td><td>Melee</td><td>Fire</td></tr>
+                    <tr><td>Infestation</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Instantáneo</td><td>30 ft.</td><td>CON Save</td><td>Poison</td></tr>
+                    <tr><td>Lightning Lure</td><td>Evocación • V</td><td>1 acción</td><td>Instantáneo</td><td>Self, 15 ft.</td><td>STR Save</td><td>Lightning</td></tr>
+                    <tr><td>Mage Hand</td><td>Conjuración • V, S</td><td>1 acción</td><td>1 minuto</td><td>30 ft.</td><td>–</td><td>Utility</td></tr>
+                    <tr><td>Magic Stone</td><td>Transmutación • V, S</td><td>1 acción bonus</td><td>1 minuto</td><td>Touch</td><td>Ranged</td><td>Bludgeoning</td></tr>
+                    <tr><td>Mind Sliver</td><td>Encantamiento • V</td><td>1 acción</td><td>1 ronda</td><td>60 ft.</td><td>INT Save</td><td>Psychic</td></tr>
+                    <tr><td>Minor Illusion</td><td>Ilusión • S, M</td><td>1 acción</td><td>1 minuto</td><td>30 ft. (5 ft.)</td><td>–</td><td>Control</td></tr>
+                    <tr><td>Poison Spray</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Instantáneo</td><td>30 ft.</td><td>Ranged</td><td>Poison</td></tr>
+                    <tr><td>Prestidigitation</td><td>Transmutación • V, S</td><td>1 acción</td><td>1 hora</td><td>10 ft.</td><td>–</td><td>Utility</td></tr>
+                    <tr><td>Sword Burst</td><td>Conjuración • V</td><td>1 acción</td><td>Instantáneo</td><td>Self, 5 ft.</td><td>DEX Save</td><td>Force</td></tr>
+                    <tr><td>Thunderclap</td><td>Evocación • S</td><td>1 acción</td><td>Instantáneo</td><td>Self (5 ft.)</td><td>CON Save</td><td>Thunder</td></tr>
+                    <tr><td>Toll the Dead</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Instantáneo</td><td>60 ft.</td><td>WIS Save</td><td>Necrotic</td></tr>
+                    <tr><td>True Strike</td><td>Adivinación • S, M</td><td>1 acción</td><td>Instantáneo</td><td>Self</td><td>Melee</td><td>Radiant</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+         <!-- NIVEL 1 -->
+        <h3>✨ Hechizos de Nivel 1</h3>
+        <button class="collapsible">Mostrar / Ocultar Nivel 1</button>
+        <div class="content" style="display:none; margin-top:10px;">
+            <table class="progression-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Escuela / Componentes</th>
+                        <th>Tiempo de Lanzamiento</th>
+                        <th>Duración</th>
+                        <th>Alcance / Área</th>
+                        <th>Tirada / Defensa</th>
+                        <th>Daño / Efecto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Armor of Agathys</td><td>Abjuración • V, S, M</td><td>1 acción bonus</td><td>1 hora</td><td>Self</td><td>–</td><td>Cold</td></tr>
+                    <tr><td>Arms of Hadar</td><td>Conjuración • V, S</td><td>1 acción</td><td>Instantáneo</td><td>Self (10 ft.)</td><td>STR Save</td><td>Necrotic</td></tr>
+                    <tr><td>Bane</td><td>Encantamiento • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>30 ft.</td><td>CHA Save</td><td>Debuff</td></tr>
+                    <tr><td>Cause Fear</td><td>Nigromancia • V</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft.</td><td>WIS Save</td><td>Frightened</td></tr>
+                    <tr><td>Charm Person</td><td>Encantamiento • V, S</td><td>1 acción</td><td>1 hora</td><td>30 ft.</td><td>WIS Save</td><td>Charmed</td></tr>
+                    <tr><td>Comprehend Languages</td><td>Adivinación • V, S, M (Ritual)</td><td>1 acción</td><td>1 hora</td><td>Self</td><td>–</td><td>Social</td></tr>
+                    <tr><td>Detect Magic</td><td>Adivinación • V, S (Concentración, Ritual)</td><td>1 acción</td><td>10 minutos</td><td>Self (30 ft.)</td><td>–</td><td>Detección</td></tr>
+                    <tr><td>Distort Value</td><td>Ilusión • V</td><td>1 minuto</td><td>8 horas</td><td>Touch (1 ft.)</td><td>–</td><td>–</td></tr>
+                    <tr><td>Expeditious Retreat</td><td>Transmutación • V, S (Concentración)</td><td>1 acción bonus</td><td>10 minutos</td><td>Self</td><td>–</td><td>Movement</td></tr>
+                    <tr><td>Hellish Rebuke</td><td>Evocación • V, S</td><td>Reaction *</td><td>Instantáneo</td><td>60 ft.</td><td>DEX Save</td><td>Fire</td></tr>
+                    <tr><td>Hex</td><td>Encantamiento • V, S, M (Concentración)</td><td>1 acción bonus</td><td>1 hora</td><td>90 ft.</td><td>–</td><td>Necrotic</td></tr>
+                    <tr><td>Illusory Script</td><td>Ilusión • S, M (Ritual)</td><td>1 minuto</td><td>10 días</td><td>Touch</td><td>–</td><td>Comunicación</td></tr>
+                    <tr><td>Protection from Evil and Good</td><td>Abjuración • V, S, M (Concentración)</td><td>1 acción</td><td>10 minutos</td><td>Touch</td><td>–</td><td>Buff</td></tr>
+                    <tr><td>Speak with Animals</td><td>Adivinación • V, S (Ritual)</td><td>1 acción</td><td>10 minutos</td><td>Self</td><td>–</td><td>Comunicación</td></tr>
+                    <tr><td>Tasha's Hideous Laughter</td><td>Encantamiento • V, S, M (Concentración)</td><td>1 acción</td><td>1 minuto</td><td>30 ft.</td><td>WIS Save</td><td>Prone</td></tr>
+                    <tr><td>Unseen Servant</td><td>Conjuración • V, S, M (Ritual)</td><td>1 acción</td><td>1 hora</td><td>60 ft.</td><td>–</td><td>Control</td></tr>
+                    <tr><td>Witch Bolt</td><td>Evocación • V, S, M (Concentración)</td><td>1 acción</td><td>1 minuto</td><td>60 ft.</td><td>–</td><td>Lightning</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+       <!-- Nivel 2 -->
+<h3>✨ Hechizos de Nivel 2</h3>
+<button class="collapsible">Mostrar / Ocultar Nivel 2</button>
+<div class="content" style="display:none; margin-top:10px;">
+    <table class="progression-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Escuela / Componentes</th>
+                <th>Tiempo de Lanzamiento</th>
+                <th>Duración</th>
+                <th>Alcance / Área</th>
+                <th>Tirada / Defensa</th>
+                <th>Daño / Efecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Conocimiento Prestado</td><td>Adivinación • V, S, M</td><td>1 acción</td><td>1 hora</td><td>Yo mismo</td><td>–</td><td>Utilidad</td></tr>
+            <tr><td>Nube de Cuchillas</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft. (5 ft.)</td><td>–</td><td>Perforante</td></tr>
+            <tr><td>Corona de Locura</td><td>Encantamiento • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>120 ft.</td><td>WIS Save</td><td>Hechizado</td></tr>
+            <tr><td>Oscuridad</td><td>Evocación • V, M</td><td>1 acción</td><td>Concentración, 10 minutos</td><td>60 ft. (15 ft.)</td><td>–</td><td>Control</td></tr>
+            <tr><td>Ligadura de Tierra</td><td>Transmutación • V</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>300 ft.</td><td>STR Save</td><td>Control</td></tr>
+            <tr><td>Fascinar</td><td>Encantamiento • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft.</td><td>WIS Save</td><td>Control</td></tr>
+            <tr><td>Manada de Familiar</td><td>Conjuración • V, S</td><td>1 minuto</td><td>Concentración, 1 hora</td><td>Toque</td><td>–</td><td>–</td></tr>
+            <tr><td>Sujetar Persona</td><td>Encantamiento • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft.</td><td>WIS Save</td><td>Paralizado</td></tr>
+            <tr><td>Invisibilidad</td><td>Ilusión • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>Toque</td><td>–</td><td>Invisible</td></tr>
+            <tr><td>Pico Mental</td><td>Adivinación • S</td><td>1 acción</td><td>Concentración, 1 hora</td><td>120 ft.</td><td>WIS Save</td><td>Psíquico</td></tr>
+            <tr><td>Imagen Espejo</td><td>Ilusión • V, S</td><td>1 acción</td><td>1 minuto</td><td>Yo mismo</td><td>–</td><td>Engaño</td></tr>
+            <tr><td>Paso Brumoso</td><td>Conjuración • V</td><td>1 acción bonus</td><td>Instantáneo</td><td>Yo mismo</td><td>–</td><td>Teletransporte</td></tr>
+            <tr><td>Rayo de Debilidad</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft.</td><td>CON Save</td><td>Debuff</td></tr>
+            <tr><td>Espada Sombría</td><td>Ilusión • V, S</td><td>1 acción bonus</td><td>Concentración, 1 minuto</td><td>Yo mismo</td><td>–</td><td>Psíquico</td></tr>
+            <tr><td>Escalar como Araña</td><td>Transmutación • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>Toque</td><td>–</td><td>Buff</td></tr>
+            <tr><td>Chorro de Cartas</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Instantáneo</td><td>Yo mismo (15 ft.)</td><td>DEX Save</td><td>Fuerza</td></tr>
+            <tr><td>Sugerencia</td><td>Encantamiento • V, M</td><td>1 acción</td><td>Concentración, 8 horas</td><td>30 ft.</td><td>WIS Save</td><td>Control</td></tr>
+            <tr><td>Sentido Distorsionado</td><td>Adivinación • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>Yo mismo</td><td>–</td><td>Detección</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+      <!-- Nivel 3 -->
+<h3>✨ Hechizos de Nivel 3</h3>
+<button class="collapsible">Mostrar / Ocultar Nivel 3</button>
+<div class="content" style="display:none; margin-top:10px;">
+    <table class="progression-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Escuela / Componentes</th>
+                <th>Tiempo de Lanzamiento</th>
+                <th>Duración</th>
+                <th>Alcance / Área</th>
+                <th>Tirada / Defensa</th>
+                <th>Daño / Efecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Antagonizar</td><td>Encantamiento • V, S, M</td><td>1 acción</td><td>Instantáneo</td><td>30 ft.</td><td>WIS Save</td><td>Psíquico</td></tr>
+            <tr><td>Contraconjuro</td><td>Abjuración • S</td><td>1 reacción</td><td>Instantáneo</td><td>60 ft.</td><td>CON Save</td><td>Negación</td></tr>
+            <tr><td>Disipar Magia</td><td>Abjuración • V, S</td><td>1 acción</td><td>Instantáneo</td><td>120 ft.</td><td>–</td><td>Control</td></tr>
+            <tr><td>Enemigos por doquier</td><td>Encantamiento • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>120 ft.</td><td>INT Save</td><td>Control</td></tr>
+            <tr><td>Miedo</td><td>Ilusión • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>Self (30 ft.)</td><td>WIS Save</td><td>Asustado</td></tr>
+            <tr><td>Volar</td><td>Transmutación • V, S, M</td><td>1 acción</td><td>Concentración, 10 minutos</td><td>Toque</td><td>–</td><td>Movimiento</td></tr>
+            <tr><td>Forma Gaseosa</td><td>Transmutación • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>Toque</td><td>–</td><td>Buff</td></tr>
+            <tr><td>Hambre de Hadar</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>150 ft. (20 ft.)</td><td>DEX Save</td><td>Frío</td></tr>
+            <tr><td>Patrón Hipnótico</td><td>Ilusión • S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>120 ft. (30 ft.)</td><td>WIS Save</td><td>Hechizado</td></tr>
+            <tr><td>Incitar la Codicia</td><td>Encantamiento • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>30 ft.</td><td>WIS Save</td><td>Hechizado</td></tr>
+            <tr><td>Fortaleza Intelectual</td><td>Abjuración • V</td><td>1 acción</td><td>Concentración, 1 hora</td><td>30 ft.</td><td>–</td><td>Buff</td></tr>
+            <tr><td>Círculo Mágico</td><td>Abjuración • V, S, M</td><td>1 minuto</td><td>1 hora</td><td>10 ft. (10 ft.)</td><td>CHA Save</td><td>–</td></tr>
+            <tr><td>Imagen Mayor</td><td>Ilusión • V, S, M</td><td>1 acción</td><td>Concentración, 10 minutos</td><td>120 ft. (20 ft.)</td><td>–</td><td>Control</td></tr>
+            <tr><td>Quitar Maldición</td><td>Abjuración • V, S</td><td>1 acción</td><td>Instantáneo</td><td>Toque</td><td>–</td><td>Buff</td></tr>
+            <tr><td>Espectro de Espíritu</td><td>Nigromancia • V, S</td><td>1 acción bonus</td><td>Concentración, 1 minuto</td><td>Yo mismo</td><td>–</td><td>Frío</td></tr>
+            <tr><td>Invocar Fey</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>90 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Invocar Demonios Menores</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>60 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Invocar Criaturas de Sombra</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>90 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Invocar No-Muertos</td><td>Nigromancia • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>90 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Paso del Trueno</td><td>Conjuración • V</td><td>1 acción</td><td>Instantáneo</td><td>90 ft.</td><td>CON Save</td><td>Trueno</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+        <!-- Nivel 4 -->
+<h3>✨ Hechizos de Nivel 4</h3>
+<button class="collapsible">Mostrar / Ocultar Nivel 4</button>
+<div class="content" style="display:none; margin-top:10px;">
+    <table class="progression-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Escuela / Componentes</th>
+                <th>Tiempo de Lanzamiento</th>
+                <th>Duración</th>
+                <th>Alcance / Área</th>
+                <th>Tirada / Defensa</th>
+                <th>Daño / Efecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Destierro</td><td>Abjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>30 ft.</td><td>CHA Save</td><td>Destierro</td></tr>
+            <tr><td>Marchitamiento</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Instantáneo</td><td>30 ft.</td><td>CON Save</td><td>Nigromántico</td></tr>
+            <tr><td>Encantar Monstruo</td><td>Encantamiento • V, S</td><td>1 acción</td><td>1 hora</td><td>30 ft.</td><td>WIS Save</td><td>Hechizado</td></tr>
+            <tr><td>Puerta Dimensional</td><td>Conjuración • V</td><td>1 acción</td><td>Instantáneo</td><td>500 ft.</td><td>–</td><td>Teleportación</td></tr>
+            <tr><td>Maldición Elemental</td><td>Transmutación • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>90 ft.</td><td>CON Save</td><td>Ácido</td></tr>
+            <tr><td>Mensajero Veloz de Galder</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>10 minutos</td><td>10 ft.</td><td>–</td><td>–</td></tr>
+            <tr><td>Sello de Puerta</td><td>Abjuración • V, S, M</td><td>1 minuto</td><td>24 horas</td><td>60 ft. (30 ft.)</td><td>–</td><td>Control</td></tr>
+            <tr><td>Terreno Alucinatorio</td><td>Ilusión • V, S, M</td><td>10 minutos</td><td>24 horas</td><td>300 ft. (150 ft.)</td><td>–</td><td>Control</td></tr>
+            <tr><td>Lanza Psíquica de Raulothim</td><td>Encantamiento • V</td><td>1 acción</td><td>Instantáneo</td><td>120 ft.</td><td>INT Save</td><td>Psíquico</td></tr>
+            <tr><td>Sombra de Moil</td><td>Nigromancia • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>Self</td><td>–</td><td>Nigromántico</td></tr>
+            <tr><td>Resplandor Mortífero</td><td>Evocación • V, S</td><td>1 acción</td><td>Concentración, 10 minutos</td><td>120 ft. (30 ft.)</td><td>CON Save</td><td>Radiante</td></tr>
+            <tr><td>Espíritu de la Muerte</td><td>Nigromancia • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>60 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Invocar Aberración</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>90 ft.</td><td>–</td><td>Invocación</td></tr>
+            <tr><td>Invocar Demonio Mayor</td><td>Conjuración • V, S, M</td><td>1 acción</td><td>Concentración, 1 hora</td><td>60 ft.</td><td>–</td><td>Invocación</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+        <!-- Nivel 5 -->
+<h3>✨ Hechizos de Nivel 5</h3>
+<button class="collapsible">Mostrar / Ocultar Nivel 5</button>
+<div class="content" style="display:none; margin-top:10px;">
+    <table class="progression-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Escuela / Componentes</th>
+                <th>Tiempo de Lanzamiento</th>
+                <th>Duración</th>
+                <th>Alcance / Área</th>
+                <th>Tirada / Defensa</th>
+                <th>Daño / Efecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Contacto con Otro Plano</td><td>Divinación • V (Ritual)</td><td>1 minuto</td><td>1 minuto</td><td>Self</td><td>–</td><td>Comunicación</td></tr>
+            <tr><td>Danse Macabre</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Concentración, 1 hora</td><td>60 ft.</td><td>–</td><td>Control</td></tr>
+            <tr><td>Sueño</td><td>Ilusión • V, S, M</td><td>1 minuto</td><td>Especial</td><td>10 ft.</td><td>WIS Save</td><td>Comunicación</td></tr>
+            <tr><td>Enervación</td><td>Nigromancia • V, S</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>60 ft.</td><td>DEX Save</td><td>Nigromántico</td></tr>
+            <tr><td>Paso Lejano</td><td>Conjuración • V</td><td>1 acción bonus</td><td>Concentración, 1 minuto</td><td>Self</td><td>–</td><td>Teleportación</td></tr>
+            <tr><td>Sujetar Monstruo</td><td>Encantamiento • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>90 ft.</td><td>WIS Save</td><td>Paralizado</td></tr>
+            <tr><td>Llamado Infernal</td><td>Conjuración • V, S, M</td><td>1 minuto</td><td>1 hora</td><td>90 ft.</td><td>–</td><td>Control</td></tr>
+            <tr><td>Tormenta de Radiancia de Jallarzi</td><td>Evocación • V, S, M</td><td>1 acción</td><td>Concentración, 1 minuto</td><td>120 ft. (10 ft.)</td><td>CON Save</td><td>Radiante</td></tr>
+            <tr><td>Engaño Mayor</td><td>Ilusión • S</td><td>1 acción</td><td>Concentración, 1 hora</td><td>Self</td><td>–</td><td>Invisible</td></tr>
+            <tr><td>Inundación de Energía Negativa</td><td>Nigromancia • V, M</td><td>1 acción</td><td>Instantáneo</td><td>60 ft.</td><td>CON Save</td><td>Nigromántico</td></tr>
+            <tr><td>Atadura Planar</td><td>Abjuración • V, S, M</td><td>1 hora</td><td>24 horas</td><td>60 ft.</td><td>CHA Save</td><td>Control</td></tr>
+            <tr><td>Espejismo</td><td>Divinación • V, S, M</td><td>10 minutos</td><td>10 minutos</td><td>Self</td><td>WIS Save</td><td>Detección</td></tr>
+            <tr><td>Estática Sináptica</td><td>Encantamiento • V, S</td><td>1 acción</td><td>Instantáneo</td><td>120 ft. (20 ft.)</td><td>INT Save</td><td>Psíquico</td></tr>
+            <tr><td>Círculo de Teleportación</td><td>Conjuración • V, M</td><td>1 minuto</td><td>1 ronda</td><td>10 ft.</td><td>–</td><td>Teleportación</td></tr>
+            <tr><td>Muro de Luz</td><td>Evocación • V, S, M</td><td>1 acción</td><td>Concentración, 10 minutos</td><td>120 ft.</td><td>CON Save</td><td>Radiante</td></tr>
+        </tbody>
+    </table>
+</div>
+
+    </div>
+</div>
+
+<div id="invocaciones-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-button">&times;</button>
+        <h2>Invocaciones Sobrenaturales</h2>
+        <hr>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Ojos del Guardián de Runas</strong> (Eyes of the Rune Keeper)</h4>
+            <p>Puedes leer toda escritura.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Arma de Alma Vinculada Mejorada</strong> (Improved Soul Bonded Weapon)</h4>
+            <ul>
+                <li>Puedes usar cualquier arma a la que estés vinculado como foco de conjuro para tus conjuros de brujo.</li>
+                <li>El arma gana un bono de +1 a las tiradas de ataque y daño, a menos que ya sea un arma mágica con ese bono.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Explosión Agonizante</strong> (Agonizing Blast)</h4>
+            <p>Cuando lanzas <em>ráfaga sobrenatural (eldritch blast)</em>, añades tu modificador de Carisma al daño que inflige al impactar.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Armadura de Sombras</strong> (Armor of Shadows)</h4>
+            <p>Puedes lanzar <em>armadura de mago (mage armor)</em> sobre ti mismo a voluntad, sin gastar un espacio de conjuro ni componentes materiales.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Paso Ascendente</strong> (Ascendant Step)</h4>
+            <p>Puedes lanzar <em>levitar</em> sobre ti mismo a voluntad, sin gastar un espacio de conjuro ni componentes materiales.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Habla Bestial</strong> (Beast Speech)</h4>
+            <p>Puedes lanzar <em>hablar con los animales (speak with animals)</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Influencia Seductora</strong> (Beguiling Influence)</h4>
+            <p>Obtienes competencia en las habilidades de Engaño y Persuasión.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Susurros Hechizantes</strong> (Bewitching Whispers)</h4>
+            <p>Puedes lanzar <em>compulsión</em> una vez usando un espacio de conjuro de brujo. No puedes volver a hacerlo hasta que termines un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Manto de Moscas</strong> (Cloak of Flies)</h4>
+            <ul>
+                <li><strong>Activación:</strong> Como acción adicional, te rodeas de un aura mágica de 1,5 metros que parece un enjambre de moscas.</li>
+                <li><strong>Efectos del Aura:</strong> Te otorga ventaja en pruebas de Carisma (Intimidación) pero desventaja en las demás pruebas de Carisma.</li>
+                <li><strong>Daño:</strong> Cualquier criatura que empiece su turno en el aura recibe daño por veneno igual a tu modificador de Carisma (mínimo 0).</li>
+                <li><strong>Recarga:</strong> Debes terminar un descanso corto o largo para volver a usarlo.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Vista Infernal</strong> (Devil’s Sight)</h4>
+            <p>Puedes ver normalmente en la oscuridad, tanto mágica como no mágica, hasta una distancia de 36 metros.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Palabra Aterradora</strong> (Dreadful Word)</h4>
+            <p>Puedes lanzar <em>confusión</em> una vez usando un espacio de conjuro de brujo. No puedes volver a hacerlo hasta que termines un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Vista Sobrenatural</strong> (Eldritch Sight)</h4>
+            <p>Puedes lanzar <em>detectar magia</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Golpe Sobrenatural</strong> (Eldritch Smite)</h4>
+            <p>Una vez por turno, al impactar con tu arma vinculada, puedes gastar un espacio de conjuro para infligir 1d8 de daño de fuerza adicional (+1d8 por nivel del espacio) y derribar al objetivo (si es Enorme o menor).</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Lanza Sobrenatural</strong> (Eldritch Spear)</h4>
+            <p>Cuando lanzas <em>ráfaga sobrenatural</em>, su alcance aumenta a 90 metros.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Vigor Infernal</strong> (Fiendish Vigor)</h4>
+            <p>Puedes lanzar <em>vida falsa (false life)</em> sobre ti mismo a voluntad como un conjuro de nivel 1.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Mirada de Dos Mentes</strong> (Gaze of Two Minds)</h4>
+            <p>Puedes usar tu acción para tocar a un humanoide y percibir a través de sus sentidos. Mientras lo haces, quedas ciego y sordo a tu propio entorno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Mirada Fantasmal</strong> (Ghostly Gaze)</h4>
+            <p>Como acción, puedes ver a través de objetos sólidos hasta 9 metros durante 1 minuto (requiere concentración). Debes terminar un descanso corto o largo para volver a usarlo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Don de las Profundidades</strong> (Gift of the Depths)</h4>
+            <ul>
+                <li>Puedes respirar bajo el agua y obtienes una velocidad de nado igual a tu velocidad normal.</li>
+                <li>Puedes lanzar <em>respirar bajo el agua</em> una vez sin gastar un espacio de conjuro (se recarga con descanso largo).</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Agarre de Hadar</strong> (Grasp of Hadar)</h4>
+            <p>Una vez por turno, al impactar con <em>ráfaga sobrenatural</em>, puedes mover al objetivo 3 metros hacia ti.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Lanza de Letargo</strong> (Lance of Lethargy)</h4>
+            <p>Una vez por turno, al impactar con <em>ráfaga sobrenatural</em>, puedes reducir la velocidad del objetivo en 3 metros hasta el final de tu siguiente turno.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Bebedor de Vidas</strong> (Lifedrinker)</h4>
+            <p>Cuando impactas con tu arma vinculada, infliges daño necrótico adicional igual a tu modificador de Carisma (mínimo 1).</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Máscara de Muchas Caras</strong> (Mask of Many Faces)</h4>
+            <p>Puedes lanzar <em>disfrazarse (disguise self)</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Maestro de Miriadas Formas</strong> (Master of Myriad Forms)</h4>
+            <p>Puedes lanzar <em>alterar forma (alter self)</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Esbirros del Caos</strong> (Minions of Chaos)</h4>
+            <p>Puedes lanzar <em>invocar elemental (conjure elemental)</em> una vez usando un espacio de conjuro de brujo. Se recarga con un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Enlodar la Mente</strong> (Mire the Mind)</h4>
+            <p>Puedes lanzar <em>ralentizar (slow)</em> una vez usando un espacio de conjuro de brujo. Se recarga con un descanso largo.</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Visiones Brumosas</strong> (Misty Visions)</h4>
+            <p>Puedes lanzar <em>imagen silenciosa (silent image)</em> a voluntad.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Uno con las Sombras</strong> (One with Shadows)</h4>
+            <p>En penumbra u oscuridad, puedes usar tu acción para volverte invisible hasta que te muevas o realices una acción o reacción.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Salto de Otro Mundo</strong> (Otherworldly Leap)</h4>
+            <p>Puedes lanzar <em>saltar (jump)</em> sobre ti mismo a voluntad.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Explosión Repelente</strong> (Repelling Blast)</h4>
+            <p>Cuando impactas a una criatura con <em>ráfaga sobrenatural</em>, puedes empujarla hasta 3 metros lejos de ti.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Escultor de Carne</strong> (Sculptor of Flesh)</h4>
+            <p>Puedes lanzar <em>polimorfar (polymorph)</em> una vez usando un espacio de conjuro de brujo. Se recarga con un descanso largo.</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Velo de Sombras</strong> (Shroud of Shadow)</h4>
+            <p>Puedes lanzar <em>invisibilidad</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Señal de Mal Augurio</strong> (Sign of Ill Omen)</h4>
+            <p>Puedes lanzar <em>maldecir (bestow curse)</em> una vez usando un espacio de conjuro de brujo. Se recarga con un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Ladrón de Cinco Destinos</strong> (Thief of Five Fates)</h4>
+            <p>Puedes lanzar <em>anatema (bane)</em> una vez usando un espacio de conjuro de brujo. Se recarga con un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Tumba de Levistus</strong> (Tomb of Levistus)</h4>
+            <ul>
+                <li><strong>Activación:</strong> Como reacción al recibir daño, te encierras en hielo.</li>
+                <li><strong>Efecto:</strong> Ganas 10 puntos de golpe temporales por nivel de brujo, que absorben el daño.</li>
+                <li><strong>Consecuencias:</strong> Ganas vulnerabilidad al fuego, tu velocidad es 0 y quedas incapacitado hasta el final de tu siguiente turno.</li>
+                <li><strong>Recarga:</strong> Debes terminar un descanso corto o largo para volver a usarlo.</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Escape del Embaucador</strong> (Trickster's Escape)</h4>
+            <p>Puedes lanzar <em>libertad de movimiento (freedom of movement)</em> una vez sobre ti mismo sin gastar un espacio de conjuro. Se recarga con un descanso largo.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Visiones de Reinos Distantes</strong> (Visions of Distant Realms)</h4>
+            <p>Puedes lanzar <em>ojo arcano (arcane eye)</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Susurros de la Tumba</strong> (Whispers of the Grave)</h4>
+            <p>Puedes lanzar <em>hablar con los muertos (speak with dead)</em> a voluntad, sin gastar un espacio de conjuro.</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4><strong>Vista de Brujo</strong> (Witch Sight)</h4>
+            <p>Puedes ver la forma verdadera de cualquier cambiaformas o criatura oculta por magia de ilusión o transmutación a 9 metros de ti.</p>
+        </div>
+
+    </div>
+</div>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.section-button');
+        const modals = document.querySelectorAll('.modal-overlay');
+        const closeButtons = document.querySelectorAll('.close-button');
+        
+        // Cierra todos los modales antes de abrir uno nuevo
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                modals.forEach(modal => modal.classList.remove('active'));
+                const modalId = button.getAttribute('data-modal');
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('active');
+            });
+        });
+
+        const closeModal = (modal) => {
+            if (modal) modal.classList.remove('active');
+        };
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                closeModal(button.closest('.modal-overlay'));
+            });
+        });
+
+        modals.forEach(modal => {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) closeModal(modal);
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                const activeModal = document.querySelector('.modal-overlay.active');
+                closeModal(activeModal);
+            }
+        });
+
+        // Para los colapsables en hechizos
+        document.querySelectorAll('.collapsible').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                const content = btn.nextElementSibling;
+                if (content) {
+                    content.style.display = (content.style.display === 'none' || !content.style.display) ? 'block' : 'none';
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Fondo estrellado animado
+    const starsBg = document.createElement('div');
+    starsBg.className = 'stars-bg';
+    document.body.appendChild(starsBg);
+
+    const numStars = 80;
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.animationDuration = `${6 + Math.random() * 8}s`;
+        star.style.animationDelay = `${Math.random() * 8}s`;
+        starsBg.appendChild(star);
+    }
+});
+</script>
+
+</body>
+</html>
